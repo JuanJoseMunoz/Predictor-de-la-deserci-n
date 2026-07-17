@@ -1,0 +1,7 @@
+{
+  "model": "Random Forest",
+  "dataset": "H\u00edbrido",
+  "precision": 0.82,
+  "recall": 0.83,
+  "f1": 0.83
+}

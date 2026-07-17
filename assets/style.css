@@ -1,0 +1,54 @@
+.main > div {
+    padding-top: 1rem;
+}
+
+.block-container {
+    max-width: none !important;
+    width: 100% !important;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+    padding-left: 3rem;
+    padding-right: 3rem;
+}
+
+/* Compatible con las versiones recientes de Streamlit. */
+div[data-testid="stMainBlockContainer"] {
+    max-width: none !important;
+    width: 100% !important;
+    padding-left: 3rem;
+    padding-right: 3rem;
+}
+
+@media (max-width: 768px) {
+    .block-container,
+    div[data-testid="stMainBlockContainer"] {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+}
+
+h1 {
+    color: #0B5394;
+}
+
+h2 {
+    color: #1155CC;
+}
+
+.stMetric {
+    border-radius: 10px;
+    border: 1px solid #DDDDDD;
+    padding: 15px;
+}
+
+div[data-testid="metric-container"] {
+    background-color: #F8F9FA;
+    border-radius: 10px;
+    padding: 15px;
+}
+
+.stButton>button {
+    width: 100%;
+    border-radius: 10px;
+    height: 45px;
+}
