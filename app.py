@@ -1,11 +1,51 @@
 import streamlit as st
 
-from config import APP_TITLE
-from utils.style import load_css
+st.set_page_config(
+    page_title="Predicción de Deserción",
+    page_icon="🎓",
+    layout="wide",
+    initial_sidebar_state="expanded",
+)
 
-st.set_page_config(page_title="Student Dropout Prediction", page_icon="🎓", layout="wide", initial_sidebar_state="expanded")
-load_css()
-st.sidebar.image("images/logos/logo.jpg", width=250)
-st.sidebar.title("🎓 Student Dropout")
-st.title(APP_TITLE)
-st.caption("Prueba piloto para la predicción del riesgo de deserción estudiantil.")
+inicio = st.Page(
+    "pages/inicio.py",
+    title="Inicio",
+    icon="🏠",
+    default=True,
+)
+
+dashboard = st.Page(
+    "pages/dashboard.py",
+    title="Dashboard",
+    icon="📊",
+)
+
+prediccion = st.Page(
+    "pages/prediccion.py",
+    title="Predicción",
+    icon="🎯",
+)
+
+prediccion_masiva = st.Page(
+    "pages/prediccion_masiva.py",
+    title="Predicción masiva",
+    icon="📁",
+)
+
+acerca = st.Page(
+    "pages/acerca.py",
+    title="Acerca",
+    icon="ℹ️",
+)
+
+pg = st.navigation(
+    [
+        inicio,
+        dashboard,
+        prediccion,
+        prediccion_masiva,
+        acerca,
+    ]
+)
+
+pg.run()

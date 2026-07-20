@@ -3,7 +3,7 @@ import streamlit as st
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score
 
-from utils.load_data import load_test, load_train_hybrid, load_train_original
+from utils.load_data import load_test, load_train_hybrid
 
 BEST_PARAMS = {
     "n_estimators": 175,
@@ -17,10 +17,9 @@ BEST_PARAMS = {
     "n_jobs": -1,
 }
 
-
 @st.cache_resource
-def train_model(dataset):
-    X_train, y_train = load_train_original() if dataset == "Original" else load_train_hybrid()
+def train_model():
+    X_train, y_train = load_train_hybrid()
     X_test, y_test = load_test()
     model = RandomForestClassifier(**BEST_PARAMS)
     model.fit(X_train, y_train)
@@ -46,12 +45,25 @@ def validate_features(dataframe: pd.DataFrame, model):
         raise ValueError("Hay valores vacíos o no numéricos en: " + ", ".join(invalid))
     return result
 
+def get_risk_level(dropout_probability: float):
+    if dropout_probability < 0.40:
+        return "Bajo"
+    elif dropout_probability < 0.70:
+        return "Medio"
+    return "Alto"
+
 
 def predict_student(model, student):
     student = validate_features(student, model)
     prediction = int(model.predict(student)[0])
     probability_by_class = dict(zip(model.classes_, model.predict_proba(student)[0]))
-    return prediction, float(probability_by_class.get(0, 0.0)), float(probability_by_class.get(1, 0.0))
+    #return prediction, float(probability_by_class.get(0, 0.0)), float(probability_by_class.get(1, 0.0))
+
+    dropout_probability = float(probability_by_class.get(0, 0.0))
+    stay_probability = float(probability_by_class.get(1, 0.0))
+    risk_level = get_risk_level(dropout_probability)
+
+    return (prediction, dropout_probability, stay_probability, risk_level)
 
 
 def predict_dataframe(model, dataframe):
@@ -62,5 +74,6 @@ def predict_dataframe(model, dataframe):
     result["Predicción"] = model.predict(features)
     result["Riesgo de deserción"] = probability_by_class.get(0, 0.0)
     result["Probabilidad de permanencia"] = probability_by_class.get(1, 0.0)
-    result["Resultado"] = result["Predicción"].map({0: "Riesgo de deserción", 1: "Sin riesgo"})
+    #result["Resultado"] = result["Predicción"].map({0: "Riesgo de deserción", 1: "Sin riesgo"})
+    result["Nivel de riesgo"] = result["Riesgo de deserción"].apply(get_risk_level)
     return result
